@@ -16,6 +16,9 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.SQLContext;
+//import org.apache.spark.sql.api.java.JavaSQLContext;
+//import org.apache.spark.sql.api.java.JavaSchemaRDD;
 
 /**
  *
@@ -25,12 +28,14 @@ public class HBaserReader {
 
     public static void main(String[] args) throws IOException {
 
-        HTable table = HBaseManager.getHBaseManager().createHTable("2017092317_tmp");
+        HTable table = HBaseManager.getHBaseManager().createHTable("2017100710_tmp");
         ResultScanner scanner = table.getScanner(new Scan());
-        
+
         SparkConf sparkConf = new SparkConf();
         sparkConf.setAppName("HBaseReader").setMaster("local");
         JavaSparkContext sc = new JavaSparkContext(sparkConf);
+        SQLContext sqlContext = new SQLContext(sc);
+        
 
         List<String> jsonList = new ArrayList<String>();
 
@@ -40,20 +45,20 @@ public class HBaserReader {
             json = "";
             String rowKey = Bytes.toString(rowResult.getRow());
             //             String rowValue = Bytes.toString(rowResult.getValue("method", "method_data"));
-            System.out.println(rowKey);
+//            System.out.println(rowKey);
             for (byte[] s1 : rowResult.getMap().keySet()) {
 
                 String s1_str = Bytes.toString(s1);
-                System.out.println("Colume Family:" + s1_str);
+//                System.out.println("Colume Family:" + s1_str);
                 String jsonSame = "";
 
                 for (byte[] s2 : rowResult.getMap().get(s1).keySet()) {
                     String s2_str = Bytes.toString(s2);
-                    System.out.println("Quantify:" + s2_str);
+//                    System.out.println("Quantify:" + s2_str);
 
                     for (long s3 : rowResult.getMap().get(s1).get(s2).keySet()) {
                         String s3_str = new String(rowResult.getMap().get(s1).get(s2).get(s3));
-                        System.out.println("Value:" + s3_str);
+//                        System.out.println("Value:" + s3_str);
                         jsonSame += "\"" + s2_str + "\":" + s3_str + ",";
 
                     }
@@ -66,9 +71,15 @@ public class HBaserReader {
             jsonList.add(json);
         }
         JavaRDD<String> jsonRDD = sc.parallelize(jsonList);
-        jsonRDD.foreach(p->{
+        //  JavaSchemaRDD schemaRDD = jsql.jsonRDD(jsonRDD);
+        jsonRDD.foreach(p -> {
             System.out.println(p);
         });
+        
+       
+
+//        JavaSchemaRDD schemaRDD = jsql.jsonRDD(jsonRDD);
+//         System.out.println(schemaRDD.take(2));
     }
 
 }

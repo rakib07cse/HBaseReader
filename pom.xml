@@ -11,6 +11,12 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <dependencies>
+<!--        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.11</artifactId>
+            <version>2.2.0</version>
+            <type>jar</type>
+        </dependency>-->
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase</artifactId>
@@ -39,14 +45,14 @@
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-core_2.10</artifactId>
-            <version>2.1.0</version>
+            <artifactId>spark-core_2.11</artifactId>
+            <version>2.2.0</version>
             <type>jar</type>
         </dependency>
-           <dependency>
+        <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql_2.10</artifactId>
-            <version>2.1.0</version>
+            <artifactId>spark-sql_2.11</artifactId>
+            <version>2.2.0</version>
             <type>jar</type>
         </dependency>
     </dependencies>
